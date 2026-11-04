@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CateringControl | Gestión de eventos e insumos</title>
+  <link rel="stylesheet" href="css/estilos.css">
+  <script src="js/datos.js" defer></script>
+  <script src="js/app.js" defer></script>
+  <script src="js/eventos.js" defer></script>
+  <script src="js/menus.js" defer></script>
+  <script src="js/operaciones.js" defer></script>
+  <script src="js/reportes.js" defer></script>
+</head>
+<body>
+  <header class="encabezado">
+    <div><h1>CateringControl</h1><p>Gestión de catering y reducción de desperdicios</p></div>
+    <span class="etiqueta">Prototipo Front End · Datos locales</span>
+  </header>
+  <nav class="navegacion" aria-label="Módulos">
+    <button type="button" class="activo" data-vista="inicio">Inicio</button>
+    <button type="button" data-vista="eventos">Eventos</button>
+    <button type="button" data-vista="menus">Menús y recetas</button>
+    <button type="button" data-vista="calculos">Cálculo y compras</button>
+    <button type="button" data-vista="inventario">Inventario</button>
+    <button type="button" data-vista="sobrantes">Sobrantes</button>
+    <button type="button" data-vista="reportes">Reportes</button>
+    <button type="button" data-vista="administracion">Administración</button>
+  </nav>
+  <main class="contenedor">
+    <p id="mensajeGlobal" class="mensaje oculto" role="status" aria-live="polite"></p>
+    <section id="vista-inicio" class="vista activa"><h2>Panel principal</h2><p>Resumen de próximos eventos, insumos y desperdicio registrado.</p><div id="panelInicio"></div></section>
+    <section id="vista-eventos" class="vista"><h2>Registro y gestión de eventos</h2>
+      <form id="formEvento" class="tarjeta formulario">
+        <div><label for="cliente">Nombre del cliente</label><input id="cliente" required maxlength="100"></div>
+        <div><label for="correo">Correo del cliente</label><input id="correo" type="email" required maxlength="120"></div>
+        <div><label for="telefono">Teléfono</label><input id="telefono" required maxlength="20"></div>
+        <div><label for="fechaEvento">Fecha</label><input id="fechaEvento" type="date" required></div>
+        <div><label for="horaEvento">Hora</label><input id="horaEvento" type="time" required></div>
+        <div><label for="lugar">Lugar</label><input id="lugar" required maxlength="120"></div>
+        <div><label for="tipoEvento">Tipo de evento</label><select id="tipoEvento"><option>Corporativo</option><option>Familiar</option><option>Social</option><option>Otro</option></select></div>
+        <div><label for="invitados">Invitados confirmados</label><input id="invitados" type="number" min="1" step="1" required></div>
+        <div><label for="menuEvento">Menú</label><select id="menuEvento" required></select></div>
+        <div class="ancho-total"><button type="submit">Registrar evento</button></div>
+      </form>
+      <div class="tarjeta"><h3>Eventos registrados</h3><div class="tabla-scroll"><table><thead><tr><th>ID</th><th>Cliente</th><th>Fecha</th><th>Invitados</th><th>Menú</th><th>Estado</th><th>Acción</th></tr></thead><tbody id="tablaEventos"></tbody></table></div></div>
+    </section>
+    <section id="vista-menus" class="vista"><h2>Catálogo de menús y recetas</h2>
+      <div class="dos-columnas">
+        <form id="formReceta" class="tarjeta formulario"><h3>Nueva receta</h3>
+          <div class="ancho-total"><label for="nombreReceta">Nombre</label><input id="nombreReceta" required></div>
+          <div><label for="tamanoPorcion">Tamaño de porción (g)</label><input id="tamanoPorcion" type="number" min="1" step="0.01" required></div>
+          <div><label for="rendimiento">Rendimiento (%)</label><input id="rendimiento" type="number" min="1" max="100" step="0.01" required></div>
+          <div><label for="insumoReceta">Ingrediente</label><select id="insumoReceta" required></select></div>
+          <div><label for="cantidadReceta">Cantidad neta por porción (unidad del insumo)</label><input id="cantidadReceta" type="number" min="0.01" step="0.01" required></div>
+          <div class="ancho-total"><button type="submit">Guardar receta</button><p class="ayuda">Para simplificar el avance, cada nueva receta comienza con un ingrediente. Las recetas precargadas incluyen varios.</p></div>
+        </form>
+        <form id="formMenu" class="tarjeta formulario"><h3>Nuevo menú</h3>
+          <div class="ancho-total"><label for="nombreMenu">Nombre</label><input id="nombreMenu" required></div>
+          <div class="ancho-total"><label for="descripcionMenu">Descripción</label><input id="descripcionMenu" required></div>
+          <div class="ancho-total"><label for="recetaMenu">Receta incluida</label><select id="recetaMenu" required></select></div>
+          <div class="ancho-total"><button type="submit">Guardar menú</button><p class="ayuda">El menú registrado contiene la receta seleccionada. Los menús iniciales incluyen varias recetas.</p></div>
+        </form>
+      </div>
+      <div class="tarjeta"><h3>Menús disponibles</h3><div id="listaMenus"></div></div>
+      <div class="tarjeta"><h3>Recetas e ingredientes</h3><div class="tabla-scroll"><table><thead><tr><th>Receta</th><th>Porción (g)</th><th>Rendimiento</th><th>Ingredientes por porción</th></tr></thead><tbody id="tablaRecetas"></tbody></table></div></div>
+    </section>
+    <section id="vista-calculos" class="vista"><h2>Cálculo de porciones e insumos</h2>
+      <div class="tarjeta"><label for="eventoCalculo">Evento</label><select id="eventoCalculo"></select> <button type="button" id="btnCalcular">Calcular insumos</button><p class="ayuda">Cantidad bruta = (invitados × cantidad neta por porción) ÷ (rendimiento / 100). El costo se calcula con el precio unitario del insumo.</p></div>
+      <div class="tarjeta"><h3>Resultados del cálculo</h3><div id="resumenCalculo"></div><div class="tabla-scroll"><table><thead><tr><th>Insumo</th><th>Requerido</th><th>Disponible</th><th>Faltante</th><th>Costo estimado</th></tr></thead><tbody id="tablaCalculos"></tbody></table></div></div>
+      <div class="tarjeta"><h3>Lista de compras</h3><div class="tabla-scroll"><table><thead><tr><th>Insumo</th><th>Cantidad faltante</th><th>Costo estimado</th></tr></thead><tbody id="tablaCompras"></tbody></table></div></div>
+    </section>
+    <section id="vista-inventario" class="vista"><h2>Inventario por lotes (FEFO)</h2>
+      <form id="formLote" class="tarjeta formulario">
+        <div><label for="insumoLote">Insumo</label><select id="insumoLote" required></select></div>
+        <div><label for="cantidadLote">Cantidad recibida</label><input id="cantidadLote" type="number" min="0.01" step="0.01" required></div>
+        <div><label for="fechaIngreso">Fecha de ingreso</label><input id="fechaIngreso" type="date" required></div>
+        <div><label for="fechaVencimiento">Fecha de vencimiento</label><input id="fechaVencimiento" type="date" required></div>
+        <div class="ancho-total"><button type="submit">Registrar entrada</button></div>
+      </form>
+      <div class="tarjeta"><h3>Lotes disponibles (primero los de vencimiento más cercano)</h3><div class="tabla-scroll"><table><thead><tr><th>Lote</th><th>Insumo</th><th>Existencia</th><th>Vencimiento</th><th>Estado</th></tr></thead><tbody id="tablaLotes"></tbody></table></div></div>
+      <div class="tarjeta"><h3>Movimientos de stock</h3><div class="tabla-scroll"><table><thead><tr><th>Fecha</th><th>Lote</th><th>Tipo</th><th>Cantidad</th><th>Evento</th></tr></thead><tbody id="tablaMovimientos"></tbody></table></div></div>
+    </section>
+    <section id="vista-sobrantes" class="vista"><h2>Registro de sobrantes</h2>
+      <form id="formSobrante" class="tarjeta formulario">
+        <div><label for="eventoSobrante">Evento</label><select id="eventoSobrante" required></select></div>
+        <div><label for="insumoSobrante">Insumo</label><select id="insumoSobrante" required></select></div>
+        <div><label for="preparado">Cantidad preparada</label><input id="preparado" type="number" min="0.01" step="0.01" required></div>
+        <div><label for="sobrante">Cantidad sobrante</label><input id="sobrante" type="number" min="0" step="0.01" required></div>
+        <div><label for="destino">Destino</label><select id="destino"><option value="donacion">Donación</option><option value="reutilizacion">Reutilización</option><option value="desecho">Desecho</option></select></div>
+        <div class="ancho-total"><button type="submit">Registrar sobrante</button></div>
+      </form>
+      <div class="tarjeta"><h3>Historial de sobrantes</h3><div class="tabla-scroll"><table><thead><tr><th>Evento</th><th>Insumo</th><th>Preparado</th><th>Sobrante</th><th>Destino</th><th>%</th></tr></thead><tbody id="tablaSobrantes"></tbody></table></div></div>
+    </section>
+    <section id="vista-reportes" class="vista"><h2>Reportes e indicadores</h2><div id="indicadores"></div><div class="tarjeta"><h3>Resultados por evento</h3><div class="tabla-scroll"><table><thead><tr><th>Evento</th><th>Invitados</th><th>Costo estimado</th><th>Unidades sobrantes</th><th>% desperdicio</th></tr></thead><tbody id="tablaReportes"></tbody></table></div><p class="ayuda">No se calcula un costo real hasta incorporar compras y facturas mediante el Back End.</p></div></section>
+    <section id="vista-administracion" class="vista"><h2>Administración (vista preliminar)</h2><div class="tarjeta"><p>Catálogos definidos en el modelo relacional. La autenticación y los permisos reales de administrador se implementarán en PHP.</p><div id="panelAdmin"></div></div></section>
+  </main>
+  <footer class="pie">SC-502 · Universidad Fidélitas · Proyecto académico de catering <button type="button" class="boton-secundario" id="reiniciarDatos">Restablecer datos de demostración</button></footer>
+</body>
+</html>
