@@ -1,4 +1,4 @@
-// Integrante 3: calculo de porciones, compras e inventario FEFO.
+// Integrante 3: calculo de porciones, compras e inventario FEFO. - Sebastian
 APP.modulos.push({
     iniciar:function(){
         document.getElementById('btnCalcular').addEventListener('click',()=>{
